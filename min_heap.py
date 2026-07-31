@@ -125,6 +125,7 @@ def heapsort(da: DynamicArray) -> None:
 
 def _percolate_down(da: DynamicArray, parent: int) -> None:
     current = parent
+    heap_length = da.length()
 
     while True:
         left = 2 * current + 1
