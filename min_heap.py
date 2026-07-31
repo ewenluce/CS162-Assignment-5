@@ -106,17 +106,29 @@ def heapsort(da: DynamicArray) -> None:
     n = da.length()
 
     for parent in range(n // 2 - 1, -1, -1):
-        _percolate_down(da, parent, n)
+        _percolate_down(da, parent)
 
-    end = n - 1
-    while end > 0:
-        first_val = da.get_at_index(0)
-        end_val = da.get_at_index(end)
-        da.set_at_index(0, end_val)
-        da.set_at_index(end, first_val)
+    extracted = DynamicArray()
 
-        _percolate_down(da, 0, end)
-        end -= 1
+    while da.length() > 1:
+        last_index = da.length() - 1
+
+        root_val = da.get_at_index(0)
+        last_val = da.get_at_index(last_index)
+        da.set_at_index(0, last_val)
+        da.set_at_index(last_index, root_val)
+
+        da.remove_at_index(last_index)
+        extracted.append(root_val)
+
+        _percolate_down(da, 0)
+
+    if da.length() == 1:
+        extracted.append(da.get_at_index(0))
+        da.remove_at_index(0)
+
+    for i in range(extracted.length() - 1, -1, -1):
+        da.append(extracted.get_at_index(i))
 
 
 # It's highly recommended that you implement the following optional          #
