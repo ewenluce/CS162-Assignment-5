@@ -118,45 +118,34 @@ def heapsort(da: DynamicArray) -> None:
         _percolate_down(da, 0, end)
         end -= 1
 
-    left = 0
-    right = n - 1
-    while left < right:
-        left_val = da.get_at_index(left)
-        right_val = da.get_at_index(right)
-        da.set_at_index(left, right_val)
-        da.set_at_index(right, left_val)
-        left += 1
-        right -= 1
-
 
 # It's highly recommended that you implement the following optional          #
 # helper function for percolating elements down the MinHeap. You can call    #
 # this from inside the MinHeap class. You may edit the function definition.  #
 
 def _percolate_down(da: DynamicArray, parent: int) -> None:
-    if size is None:
-        size = da.length()
+    current = parent
 
     while True:
-        left = 2 * parent + 1
-        right = 2 * parent + 2
-        smallest = parent
+        left = 2 * current + 1
+        right = 2 * current + 2
+        smallest = current
 
-        if left < size and da.get_at_index(left) < da.get_at_index(smallest):
+        if left < heap_length and da.get_at_index(left) < da.get_at_index(smallest):
             smallest = left
 
-        if right < size and da.get_at_index(right) < da.get_at_index(smallest):
+        if right < heap_length and da.get_at_index(right) < da.get_at_index(smallest):
             smallest = right
 
-        if smallest == parent:
+        if smallest == current:
             break
 
-        parent_val = da.get_at_index(parent)
+        current_val = da.get_at_index(current)
         smallest_val = da.get_at_index(smallest)
-        da.set_at_index(parent, smallest_val)
-        da.set_at_index(smallest, parent_val)
+        da.set_at_index(current, smallest_val)
+        da.set_at_index(smallest, current_val)
 
-        parent = smallest
+        current = smallest
 
 
 # ------------------- BASIC TESTING -----------------------------------------
