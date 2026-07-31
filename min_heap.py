@@ -40,53 +40,93 @@ class MinHeap:
         return "HEAP " + str(heap_data)
 
     def add(self, node: object) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        self._heap.append(node)
+
+        index = self._heap.length() - 1
+
+        while index > 0:
+            parent = (index - 1) // 2
+
+            if self._heap.get_at_index(index) < self._heap.get_at_index(parent):
+                current_val = self._heap.get_at_index(index)
+                parent_val = self._heap.get_at_index(parent)
+                self._heap.set_at_index(index, parent_val)
+                self._heap.set_at_index(parent, current_val)
+                index = parent
+            else:
+                break
 
     def is_empty(self) -> bool:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        return self._heap.is_empty()
 
     def get_min(self) -> object:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        if self._heap.is_empty():
+            raise MinHeapException
+
+        return self._heap.get_at_index(0)
 
     def remove_min(self) -> object:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        if self._heap.is_empty():
+            raise MinHeapException
+
+        min_val = self._heap.get_at_index(0)
+        last_index = self._heap.length() - 1
+
+        if last_index == 0:
+            self._heap.remove_at_index(0)
+        else:
+            last_val = self._heap.get_at_index(last_index)
+            self._heap.set_at_index(0, last_val)
+            # removing the LAST index is O(1) for DynamicArray
+            self._heap.remove_at_index(last_index)
+            _percolate_down(self._heap, 0)
+
+        return min_val
 
     def build_heap(self, da: DynamicArray) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        new_heap = DynamicArray()
+
+        for i in range(da.length()):
+            new_heap.append(da.get_at_index(i))
+
+        self._heap = new_heap
+
+        n = self._heap.length()
+        for parent in range(n // 2 - 1, -1, -1):
+            _percolate_down(self._heap, parent)
 
     def size(self) -> int:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        return self._heap.length()
 
     def clear(self) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        self._heap = DynamicArray()
 
 
 def heapsort(da: DynamicArray) -> None:
-    """
-    TODO: Write this implementation
-    """
-    pass
+    n = da.length()
+
+    for parent in range(n // 2 - 1, -1, -1):
+        _percolate_down(da, parent, n)
+
+    end = n - 1
+    while end > 0:
+        first_val = da.get_at_index(0)
+        end_val = da.get_at_index(end)
+        da.set_at_index(0, end_val)
+        da.set_at_index(end, first_val)
+
+        _percolate_down(da, 0, end)
+        end -= 1
+
+    left = 0
+    right = n - 1
+    while left < right:
+        left_val = da.get_at_index(left)
+        right_val = da.get_at_index(right)
+        da.set_at_index(left, right_val)
+        da.set_at_index(right, left_val)
+        left += 1
+        right -= 1
 
 
 # It's highly recommended that you implement the following optional          #
@@ -94,10 +134,29 @@ def heapsort(da: DynamicArray) -> None:
 # this from inside the MinHeap class. You may edit the function definition.  #
 
 def _percolate_down(da: DynamicArray, parent: int) -> None:
-    """
-    TODO: Write your implementation
-    """
-    pass
+    if size is None:
+        size = da.length()
+
+    while True:
+        left = 2 * parent + 1
+        right = 2 * parent + 2
+        smallest = parent
+
+        if left < size and da.get_at_index(left) < da.get_at_index(smallest):
+            smallest = left
+
+        if right < size and da.get_at_index(right) < da.get_at_index(smallest):
+            smallest = right
+
+        if smallest == parent:
+            break
+
+        parent_val = da.get_at_index(parent)
+        smallest_val = da.get_at_index(smallest)
+        da.set_at_index(parent, smallest_val)
+        da.set_at_index(smallest, parent_val)
+
+        parent = smallest
 
 
 # ------------------- BASIC TESTING -----------------------------------------
