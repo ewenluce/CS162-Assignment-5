@@ -106,48 +106,38 @@ def heapsort(da: DynamicArray) -> None:
     n = da.length()
 
     for parent in range(n // 2 - 1, -1, -1):
-        _percolate_down(da, parent)
+        _percolate_down(da, parent, n)
 
-    extracted = DynamicArray()
-
-    while da.length() > 1:
-        last_index = da.length() - 1
-
+    active_size = n
+    for last in range(n - 1, 0, -1):
         root_val = da.get_at_index(0)
-        last_val = da.get_at_index(last_index)
+        last_val = da.get_at_index(last)
         da.set_at_index(0, last_val)
-        da.set_at_index(last_index, root_val)
+        da.set_at_index(last, root_val)
 
-        da.remove_at_index(last_index)
-        extracted.append(root_val)
-
-        _percolate_down(da, 0)
-
-    if da.length() == 1:
-        extracted.append(da.get_at_index(0))
-        da.remove_at_index(0)
-
-    for i in range(extracted.length() - 1, -1, -1):
-        da.append(extracted.get_at_index(i))
+        active_size -= 1
+        _percolate_down(da, 0, active_size)
 
 
 # It's highly recommended that you implement the following optional          #
 # helper function for percolating elements down the MinHeap. You can call    #
 # this from inside the MinHeap class. You may edit the function definition.  #
 
-def _percolate_down(da: DynamicArray, parent: int) -> None:
+def _percolate_down(da: DynamicArray, parent: int, size: int = None) -> None:
+    if size is None:
+        size = da.length()
+
     current = parent
-    heap_length = da.length()
 
     while True:
         left = 2 * current + 1
         right = 2 * current + 2
         smallest = current
 
-        if left < heap_length and da.get_at_index(left) < da.get_at_index(smallest):
+        if left < size and da.get_at_index(left) < da.get_at_index(smallest):
             smallest = left
 
-        if right < heap_length and da.get_at_index(right) < da.get_at_index(smallest):
+        if right < size and da.get_at_index(right) < da.get_at_index(smallest):
             smallest = right
 
         if smallest == current:
